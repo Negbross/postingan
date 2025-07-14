@@ -1,0 +1,16 @@
+@font-face {
+  font-display: swap;
+  font-family: 'Roboto-mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/roboto-mono-v30-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/ubuntu-v20-latin-regular.woff2') format('woff2');
+}
+
