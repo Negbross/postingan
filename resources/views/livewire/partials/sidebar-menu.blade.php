@@ -18,7 +18,8 @@
     x-transition:leave="transition ease-in-out duration-300"
     x-transition:leave-start="translate-x-0"
     x-transition:leave-end="-translate-x-full"
-    class="fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl md:hidden"
+    class="fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform md:hidden sidebar-animation"
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
 >
     <div class="p-6 border-b border-gray-200">
         <div class="flex items-center justify-between">
