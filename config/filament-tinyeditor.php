@@ -66,7 +66,7 @@ return [
     'extra' => [
         'toolbar' => [
             // 'fontsize' => '10px 12px 13px 14px 16px 18px 20px',
-            // 'fontfamily' => 'Tahoma=tahoma,arial,helvetica,sans-serif;',
+             'fontfamily' => 'Tahoma=tahoma,arial,helvetica,sans-serif;Ubuntu=Ubuntu;Roboto Mono=Roboto-mono',
         ]
     ]
 ];

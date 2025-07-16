@@ -1,6 +1,5 @@
 <div x-data="{
         scrollProgress: 0,
-        sidebarOpen: false,
         updateScrollProgress() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -87,14 +86,17 @@
         <div class="reading-progress" :style="`width: ${scrollProgress}%`"></div>
     </div>
 
-    @includeIf(!$isEmbedded, 'livewire.partials.navbar-header')
-    @includeIf(!$isEmbedded, 'livewire.partials.sidebar-menu')
+    @if(!$isEmbedded)
+            @include('livewire.partials.navbar-header')
+            @include('livewire.partials.sidebar-menu')
+    @endif
 
     <!-- Main ArticleDetail Content -->
     <main class="flex-1 min-w-0 bg-gray-50 dark:bg-gray-700">
         <!-- ArticleDetail Header -->
         <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="h-64 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative">
+            <div class="h-64 bg-cover bg-center relative"
+                 style="background-image: url({{ $post->getFeaturedImageUrlAttribute() }})">
                 <div class="absolute inset-0 bg-black bg-opacity-20"></div>
                 <div class="absolute bottom-6 left-6 right-6 text-white">
                     <div class="flex items-center space-x-2 mb-3">
@@ -103,7 +105,7 @@
                         <span class="text-sm opacity-90">{{ $post->created_at->format('d M Y') }}</span>
                     </div>
                     <h1 class="text-3xl md:text-4xl font-bold leading-tight">{{ $post->title }}</h1>
-                    <p class="text-lg opacity-90 mt-2">{!! $post->excerpt !!}</p>
+                    <p class="text-lg opacity-90 mt-2">{!! $post->getExcerptAttribute($post->excerpt) !!}</p>
                 </div>
             </div>
 
@@ -115,10 +117,10 @@
                             <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
                                 <i class="fas fa-user text-indigo-600"></i>
                             </div>
-                            <div>
-                                <p class="font-medium text-gray-900">{{ $post->user->name }}</p>
-                                <p class="text-sm text-gray-500">{{ $post->user->getRoleClass() }}</p> {{-- need role --}}
-                            </div>
+{{--                            <div>--}}
+{{--                                <p class="font-medium text-gray-900">{{ $post->user->name }}</p>--}}
+{{--                                <p class="text-sm text-gray-500">{{ $post->user->getRoleClass() }}</p> --}}{{-- need role --}}
+{{--                            </div>--}}
                         </div>
                     </div>
                     <div class="flex items-center space-x-4 text-sm text-gray-500">

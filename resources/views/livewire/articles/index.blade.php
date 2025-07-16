@@ -21,7 +21,7 @@
 @endpush
 <div class="min-h-screen bg-gray-50 dark:text-white dark:bg-gray-700">
     @include('livewire.partials.navbar-header')
-
+    @include('livewire.partials.sidebar-menu')
     {{-- Header Section --}}
     <div class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -49,7 +49,7 @@
                     @if($post->thumbnail)
                         <div class="aspect-video bg-gray-200 overflow-hidden">
                             <img
-                                src="{{ $post->thumbnail }}"
+                                src="{{ $post->getFeaturedImageUrlAttribute() }}"
                                 alt="{{ $post->title }}"
                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                             >

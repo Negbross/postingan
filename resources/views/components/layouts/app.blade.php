@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id" x-data="{
-      darkMode: false}"
+      darkMode: false,
+      sidebarOpen: false
+      }"
       :class="{'dark': darkMode === true }">
 <head>
     <meta charset="UTF-8">

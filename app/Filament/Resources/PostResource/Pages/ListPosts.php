@@ -17,10 +17,12 @@ use Filament\Tables\Actions\ForceDeleteAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListPosts extends ListRecords
 {
@@ -37,6 +39,24 @@ class ListPosts extends ListRecords
     {
         return $table
             ->columns([
+                IconColumn::make('status')
+                    ->label(' ')
+                    ->icon(function (Post $post) {
+                        return match ($post->status) {
+                            "published" => "heroicon-o-check-circle",
+                            "draft" => "heroicon-o-clock",
+                            "denied" => "heroicon-o-x-circle",
+                        };
+                    })
+                    ->color(function (Post $post) {
+                        return match ($post->status) {
+                            "published" => "success",
+                            "draft" => "warning",
+                            "denied" => "danger",
+                        };
+                    })
+                    ->tooltip(fn(Post $record): string => ucfirst($record->status)),
+
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable()
@@ -49,9 +69,9 @@ class ListPosts extends ListRecords
                     ->sortable(),
 
                 ViewColumn::make('thumbnail')
-                ->label('Thumbnail')
-                ->view('filaments.tables.columns.thumbnail')
-                ->visibleFrom('lg'),
+                    ->label('Thumbnail')
+                    ->view('filaments.tables.columns.thumbnail')
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('published_at')
                     ->label('Published Date')
@@ -60,17 +80,19 @@ class ListPosts extends ListRecords
                 TextColumn::make('user.name')
                     ->searchable()
                     ->sortable()
-                    ->visible(fn() => auth()->user()->hasRole('super_admin')),
-
-                TextColumn::make('status')
-                    ->label('Status Post')
-                    ->visible(fn() => auth()->user()->hasRole('super_admin')),
+                    ->visible(fn() => auth()->user()->can('view-any', Post::class)),
 
                 TextColumn::make('category.name')
                     ->searchable()
                     ->sortable()
                     ->visibleFrom('lg'),
             ])
+            ->modifyQueryUsing(function (Builder $query){
+                if (!auth()->user()->hasRole('super_admin')) {
+                    return $query->where('user_id', auth()->user()->id);
+                }
+                return $query;
+            })
             ->filters([
                 TrashedFilter::make(),
             ])
@@ -78,18 +100,18 @@ class ListPosts extends ListRecords
                 EditAction::make(),
                 DeleteAction::make(),
                 \Filament\Tables\Actions\ViewAction::make()
-                ->color('success'),
+                    ->color('success'),
                 ActionGroup::make([
                     Action::make("Publish")
                         ->requiresConfirmation()
-                        ->icon("heroicon-o-check-circle" )
+                        ->icon("heroicon-o-check-circle")
                         ->color('success')
                         ->action(function (Post $record) {
                             $record->update([
                                 'status' => 'published',
                                 'published_at' => now()
                             ]);
-                        })->visible(fn (Post $record): bool => $record->status !== 'published'),
+                        })->visible(fn(Post $record): bool => $record->status !== 'published'),
                     Action::make("Denied")
                         ->color("danger")
                         ->requiresConfirmation()
@@ -97,9 +119,9 @@ class ListPosts extends ListRecords
                         ->action(function (Post $record) {
                             $record->where('id', $record->id)
                                 ->update(['status' => 'denied']);
-                        })->visible(fn (Post $record): bool => $record->status !== 'denied')
+                        })->visible(fn(Post $record): bool => $record->status !== 'denied')
                 ])
-                ->visible(fn () => auth()->user()->hasRole('super_admin')),
+                    ->visible(fn() => auth()->user()->hasRole('super_admin')),
                 RestoreAction::make(),
                 ForceDeleteAction::make(),
             ])

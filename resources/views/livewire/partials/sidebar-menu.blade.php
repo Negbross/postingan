@@ -44,7 +44,7 @@
                 <a href="{{ route('categories') }}" wire:navigate
                    class="{{ request()->is('categories*') ? 'text-blue-700' : 'text-gray-500' }} hover:text-gray-900 font-medium transition-colors duration-200">Category</a>
             </button>
-
+            <hr>
         </div>
     </div>
 

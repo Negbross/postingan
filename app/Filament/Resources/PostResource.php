@@ -6,6 +6,7 @@ use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
 use App\Models\Tag;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class PostResource extends Resource
+class PostResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Post::class;
 
@@ -31,6 +32,7 @@ class PostResource extends Resource
         return $form
             ->schema([
                 TextInput::make('title')
+                    ->maxLength(100)
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
@@ -49,6 +51,7 @@ class PostResource extends Resource
                     ->fileAttachmentsDirectory(fn (): string => 'user-' . auth('web')->user()->id . '/post-content')
                     ->fileAttachmentsVisibility('public')
                     ->resize('both')
+                    ->disableGrammarly()
                     ->columnSpanFull()
                     ->required(),
 
@@ -68,6 +71,7 @@ class PostResource extends Resource
                     ->collapsed(),
 
                 FileUpload::make('thumbnail')
+                    ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'gif'])
                     ->disk('public')
                     ->directory('user' . auth('web')->user()->id . '/posts/thumbnails')
                     ->nullable()
@@ -130,5 +134,20 @@ class PostResource extends Resource
         }
 
         return $details;
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            "view-any",
+            "view",
+            "create",
+            "edit",
+            "delete",
+            "trash",
+            "restore",
+            "forceDelete",
+            "publish",
+        ];
     }
 }

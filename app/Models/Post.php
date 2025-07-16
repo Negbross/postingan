@@ -120,7 +120,7 @@ class Post extends Model
 
         // Kembalikan sebagai Data URI yang siap dipakai di <img>
         return $this->thumbnail
-            ? storage_path($this->thumbnail)
+            ? Storage::disk('public')->url($this->thumbnail)
             : 'data:image/svg+xml;base64,' . base64_encode($svg);
     }
 
