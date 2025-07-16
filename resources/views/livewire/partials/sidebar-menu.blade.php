@@ -19,7 +19,6 @@
     x-transition:leave-start="translate-x-0"
     x-transition:leave-end="-translate-x-full"
     class="fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform md:hidden sidebar-animation"
-    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
 >
     <div class="p-6 border-b border-gray-200">
         <div class="flex items-center justify-between">
@@ -46,6 +45,10 @@
                    class="{{ request()->is('categories*') ? 'text-blue-700' : 'text-gray-500' }} hover:text-gray-900 font-medium transition-colors duration-200">Category</a>
             </button>
             <hr>
+            <button class="w-full flex items-center justify-between px-1.5 py-1 rounded-lg hover:bg-indigo-50 transition-colors duration-200">
+                <a href="{{ route('categories.show', 'cerita-pendek') }}" wire:navigate
+                   class="{{ request()->is('categories/cerita-pendek*') ? 'text-blue-700' : 'text-gray-500' }} hover:text-gray-900 font-medium transition-colors duration-200">Cerpen</a>
+            </button>
         </div>
     </div>
 
