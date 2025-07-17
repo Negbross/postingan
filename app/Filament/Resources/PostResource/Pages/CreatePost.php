@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PostResource\Pages;
 
 use App\Filament\Resources\PostResource;
+use Exception;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -59,7 +60,7 @@ class CreatePost extends CreateRecord
     public function updatedDocxFile(): void
     {
         $this->validate([
-            'docxFile' => 'required|mimes:docx|max:5120'
+            'docxFile' => 'required|mimes:docx|max:10240'
         ]);
 
         try {
@@ -70,18 +71,17 @@ class CreatePost extends CreateRecord
             foreach ($sections as $section) {
                 $this->extractImagesRecursively($section, $imageReplacements);
             }
-//            dd($imageReplacements);
+
             $htmlWriter = new HTML($phpWord);
             $htmlContent = $htmlWriter->getContent();
 
             foreach ($imageReplacements as $oldSrc => $newUrl) {
                 $htmlContent = str_replace('src="data:image/png;base64,' . $oldSrc . '"', 'src="' . $newUrl . '"', $htmlContent);
             }
-//            dd($htmlContent);
+
             $cleanHtml = clean($htmlContent);
-//            dd($cleanHtml);
             $this->data['content'] = $cleanHtml;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             logger()->error($exception->getMessage());
             $this->addError('docxFile', 'Gagal memproses file. Pastikan file tidak rusak.');
         }
