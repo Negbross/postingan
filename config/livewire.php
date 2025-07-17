@@ -65,7 +65,7 @@ return [
 
     'temporary_file_upload' => [
         'disk' => null,        // Example: 'local', 's3'              | Default: 'default'
-        'rules' => ['file|mimes:png,jpg,pdf|max:102400'],
+        'rules' => 'file|mimes:png,jpg,pdf,docx,doc|max:102400',
         'directory' => null,   // Example: 'tmp'                      | Default: 'livewire-tmp'
         'middleware' => null,  // Example: 'throttle:5,1'             | Default: 'throttle:60,1'
         'preview_mimes' => [   // Supported file types for temporary pre-signed file URLs...

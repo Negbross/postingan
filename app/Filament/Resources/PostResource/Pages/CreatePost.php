@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource;
 use Exception;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -19,9 +20,11 @@ class CreatePost extends CreateRecord
     use WithFileUploads;
 
     protected static string $resource = PostResource::class;
+    public ?Model $record;
 
     protected static bool $canCreateAnother = false;
     public ?TemporaryUploadedFile $docxFile = null;
+    public array $newlyCreatedImagePaths = [];
 
     protected function getHeaderActions(): array
     {
@@ -38,11 +41,11 @@ class CreatePost extends CreateRecord
             $imageData = base64_decode($base64Data);
             if ($imageData) {
                 $imageName = 'docx-import-' . Str::random(10) . '.' . $element->getImageExtension();
-                $directory = 'user-' . auth()->id() . '/post-content-images/docx-import';
+                $directory = 'tmp-docx/user-' . auth()->id();
                 $storagePath = $directory . '/' . $imageName;
-//            dd($imageData);
                 Storage::disk('public')->put($storagePath, $imageData);
 
+                $this->newlyCreatedImagePaths[] = $storagePath;
                 // Simpan path lama dan URL baru untuk diganti nanti
                 $imageReplacements[$element->getImageStringData(true)] = Storage::disk('public')->url($storagePath);
             }
@@ -59,9 +62,7 @@ class CreatePost extends CreateRecord
 
     public function updatedDocxFile(): void
     {
-        $this->validate([
-            'docxFile' => 'required|mimes:docx|max:10240'
-        ]);
+        $this->validateOnly('docxFile');
 
         try {
             $path = $this->docxFile->getRealPath();
@@ -89,6 +90,27 @@ class CreatePost extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $content = $data['content'];
+        $newContent = $content;
+
+        foreach ($this->newlyCreatedImagePaths as $tmpPath) {
+            $permanentPath = str_replace('tmp-docx/', '', $tmpPath);
+
+            if (Storage::disk('public')->exists($tmpPath)) {
+                Storage::disk('public')->move($tmpPath, $permanentPath);
+
+                // Buat path URL relatif untuk PENCARIAN
+                // Hasilnya akan menjadi: /storage/tmp-docx-imports/user-123/file.jpg
+                $relativeTempUrl = '/storage/' . $tmpPath;
+
+                // Buat path URL relatif untuk PENGGANTIAN
+                // Hasilnya akan menjadi: /storage/user-123/post-content-images/file.jpg
+                $relativePermanentUrl = '/storage/' . $permanentPath;
+                $newContent = str_replace($relativeTempUrl , $relativePermanentUrl , $newContent);
+            }
+
+        }
+        $data['content'] = $newContent;
         return [...$data, 'user_id' => auth()->user()->id];
     }
 }

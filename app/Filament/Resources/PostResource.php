@@ -43,7 +43,6 @@ class PostResource extends Resource implements HasShieldPermissions
                     ->unique(Post::class, 'slug', fn($record) => $record),
 
                 TextInput::make('excerpt')
-
                     ->nullable(),
 
                 TinyEditor::make('content')

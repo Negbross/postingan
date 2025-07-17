@@ -44,6 +44,9 @@
         class="hidden"
     >
 
+    {{-- 👇 TAMBAHKAN INPUT TERSEMBUNYI INI --}}
+    <input type="hidden" wire:model="newlyCreatedImagePaths">
+
 
     <div wire:ignore x-ignore ax-load
         ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('tinyeditor', 'amidesfahani/filament-tinyeditor') }}"
