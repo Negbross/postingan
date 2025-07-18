@@ -74,7 +74,7 @@ class PostResource extends Resource implements HasShieldPermissions
                 FileUpload::make('thumbnail')
                     ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'gif'])
                     ->disk('public')
-                    ->directory('user' . auth('web')->user()->id . '/post-content-images/thumbnail')
+                    ->directory('user-' . auth('web')->user()->id . '/post-content-images/thumbnail')
                     ->nullable()
                     ->image(),
 
