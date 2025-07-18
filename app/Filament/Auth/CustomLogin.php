@@ -21,7 +21,7 @@ class CustomLogin extends BaseAuthPage
 
     protected function getLoginComponent(): Component
     {
-        return TextInput::make('Login')
+        return TextInput::make('login')
             ->required()
             ->label('Login')
             ->required()
@@ -32,10 +32,10 @@ class CustomLogin extends BaseAuthPage
 
     protected function getCredentialsFromFormData(array $data) : array
     {
-        $login_type = filter_var($data['Login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $login_type = filter_var($data['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         return [
-            $login_type => $data['Login'],
+            $login_type => $data['login'],
             'password' => $data['password'],
         ];
     }

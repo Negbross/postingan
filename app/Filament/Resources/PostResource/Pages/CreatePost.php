@@ -41,7 +41,7 @@ class CreatePost extends CreateRecord
             $imageData = base64_decode($base64Data);
             if ($imageData) {
                 $imageName = 'docx-import-' . Str::random(10) . '.' . $element->getImageExtension();
-                $directory = 'tmp-docx/user-' . auth()->id();
+                $directory = 'tmp-docx/user-' . auth()->id() . '/post-content-images';
                 $storagePath = $directory . '/' . $imageName;
                 Storage::disk('public')->put($storagePath, $imageData);
 

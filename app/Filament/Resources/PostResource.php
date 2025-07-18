@@ -47,7 +47,9 @@ class PostResource extends Resource implements HasShieldPermissions
 
                 TinyEditor::make('content')
                     ->fileAttachmentsDisk('public')
-                    ->fileAttachmentsDirectory(fn (): string => 'user-' . auth('web')->user()->id . '/post-content')
+                    ->fileAttachmentsDirectory(
+                        fn (): string => 'user-' . auth('web')->user()->id . '/post-content-images'
+                    )
                     ->fileAttachmentsVisibility('public')
                     ->resize('both')
                     ->disableGrammarly()
@@ -72,7 +74,7 @@ class PostResource extends Resource implements HasShieldPermissions
                 FileUpload::make('thumbnail')
                     ->acceptedFileTypes(['jpg', 'jpeg', 'png', 'gif'])
                     ->disk('public')
-                    ->directory('user' . auth('web')->user()->id . '/posts/thumbnails')
+                    ->directory('user' . auth('web')->user()->id . '/post-content-images/thumbnail')
                     ->nullable()
                     ->image(),
 
