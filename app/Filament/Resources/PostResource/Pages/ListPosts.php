@@ -4,7 +4,6 @@ namespace App\Filament\Resources\PostResource\Pages;
 
 use App\Filament\Resources\PostResource;
 use App\Models\Post;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
@@ -40,7 +39,7 @@ class ListPosts extends ListRecords
         return $table
             ->columns([
                 IconColumn::make('status')
-                    ->label(' ')
+                    ->label('')
                     ->icon(function (Post $post) {
                         return match ($post->status) {
                             "published" => "heroicon-o-check-circle",

@@ -141,6 +141,7 @@ class PostResource extends Resource implements HasShieldPermissions
     {
         return [
             "view-any",
+            "delete-any",
             "view",
             "create",
             "edit",

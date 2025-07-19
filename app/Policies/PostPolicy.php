@@ -55,7 +55,7 @@ class PostPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('{{ DeleteAny }}');
+        return $user->can('delete-any_post');
     }
 
     /**
