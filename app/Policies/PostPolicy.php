@@ -71,7 +71,7 @@ class PostPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return $user->can('force-delete-any_post');
     }
 
     /**
@@ -87,7 +87,7 @@ class PostPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return $user->can('restore-any_post');
     }
 
     /**

@@ -27,11 +27,14 @@ class DatabaseSeeder extends Seeder
 //            'password' => Hash::make('123'),
 //            'username' => 'divo',
 //        ]);
-        User::factory(10)->create();
-        Category::factory(15)->create();
-        Tag::factory(30)->create();
 
-        Post::factory(30)->create();
+        // Uncomment for dev mode
+//        User::factory(10)->create();
+//        Category::factory(15)->create();
+//        Tag::factory(30)->create();
+
+//        Post::factory(30)->create();
+        // Edit to use ur own name
         $this->call(SuperAdminSeeder::class);
     }
 }
