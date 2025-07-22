@@ -14,7 +14,9 @@
         "laravel/octane": "^2.11",
         "laravel/tinker": "^2.9",
         "mews/purifier": "^3.4",
-        "phpoffice/phpword": "^1.4"
+        "phpoffice/phpword": "^1.4",
+        "spatie/laravel-backup": "^9.3",
+        "ext-zip": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
