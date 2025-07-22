@@ -37,12 +37,8 @@ class PostResource extends Resource implements HasShieldPermissions
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
 
-                TextInput::make('slug')
-                    ->readOnly()
-                    ->required()
-                    ->unique(Post::class, 'slug', fn($record) => $record),
-
                 TextInput::make('excerpt')
+                    ->maxLength(60)
                     ->nullable(),
 
                 TinyEditor::make('content')

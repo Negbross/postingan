@@ -46,62 +46,14 @@ class EditPost extends EditRecord
 
     public function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                TextInput::make('title')
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
+        $baseSchema = PostResource::form($form);
 
-                TextInput::make('slug')
-                    ->readOnly()
-                    ->required()
-                    ->unique(Post::class, 'slug', fn($record) => $record),
-
-                TinyEditor::make('content')
-                    ->fileAttachmentsDisk('public')
-                    ->fileAttachmentsDirectory(fn (): string => 'user-' . auth('web')->user()->id . '/posts')
-                    ->fileAttachmentsVisibility('public')
-                    ->profile('default')
-                    ->resize('both')
-                    ->columnSpanFull()
-                    ->required(),
-
-                Repeater::make('references')
-                    ->label('Daftar referensinya')
-                    ->schema([
-                        TextInput::make('title')
-                            ->required()
-                            ->label('Judul Referensi'),
-                        TextInput::make('url')
-                            ->nullable()
-                            ->label('URL Referensi')
-                            ->url(),
-                    ])->columnSpanFull()
-                    ->addActionLabel('Tambah Referensi')
-                    ->collapsible()
-                    ->collapsed(),
-
-                FileUpload::make('thumbnail')
-                    ->disk('public')
-                    ->directory('user' . auth('web')->user()->id . '/posts/thumbnails')
-                    ->nullable()
-                    ->image(),
-
-                TextInput::make('user_id')
-                    ->hidden()
-                    ->required(),
-
-                Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->searchable()
-                    ->required(),
-
-                TagsInput::make('tags')
-                    ->label('Tags')
-                    ->suggestions(Tag::all()->pluck('name')->all())
-
-            ]);
+        return $baseSchema->schema(array_merge([
+            $baseSchema->getComponents(),
+            TextInput::make('slug')
+                ->required()
+                ->unique(Post::class, 'slug', fn($record) => $record),
+        ]));
     }
 
     private function extractImagesRecursively(AbstractElement $element, array &$imageReplacements): void

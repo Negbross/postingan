@@ -19,6 +19,7 @@ class Post extends Model
     protected $fillable = [
         'title',
         'slug',
+        'excerpt',
         'content',
         'thumbnail',
         'published_at',
@@ -68,7 +69,7 @@ class Post extends Model
     {
         if ($value) return $value;
 
-        return Str::limit(strip_tags($this->content), 80);
+        return Str::limit(strip_tags($this->content), 60);
     }
 
     /**

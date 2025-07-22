@@ -3,7 +3,10 @@
 namespace App\Filament\Resources\PostResource\Pages;
 
 use App\Filament\Resources\PostResource;
+use App\Models\Post;
 use Exception;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -31,6 +34,19 @@ class CreatePost extends CreateRecord
         return [
 
         ];
+    }
+
+    public function form(Form $form): Form
+    {
+        $baseSchema = PostResource::form($form);
+
+        return $baseSchema->schema(array_merge([
+            $baseSchema->getComponents(),
+            TextInput::make('slug')
+                ->readOnly()
+                ->required()
+                ->unique(Post::class, 'slug', fn($record) => $record),
+        ]));
     }
 
     private function extractImagesRecursively(AbstractElement $element, array &$imageReplacements): void
